@@ -54,7 +54,7 @@
     <h2>TANGO</h2>
     <button onclick="mostrarInicio()">Inicio</button>
     <button id="btnUsuarios" onclick="accederUsuarios()">Acceso a Usuarios</button>
-    <button onclick="accederPlanes()">Planes</button>
+    <button id="btnPlanes" onclick="accederPlanes()">Acceso a Planes</button>
     <button onclick="mostrarCampanas()">Mis Campañas</button>
     <button onclick="agregarCampana()">Agregar Campaña</button>
     <button onclick="cerrarSesion()">Cerrar sesión</button>
@@ -81,6 +81,7 @@
     // Mostrar u ocultar botón Acceso a Usuarios
     if (tipo !== "A") {
       document.getElementById("btnUsuarios").style.display = "none";
+      document.getElementById("btnPlanes").style.display = "none";
     }
 
     function mostrarInicio() {
@@ -95,9 +96,9 @@
       window.location.href = 'https://docs.google.com/spreadsheets/d/1-Nn3XEag5u408v6H7aDiKMnKJKl5llZoVWEn8upMyhY/edit?gid=0';
     }
 
-function accederPlanes() {
-  window.open("https://docs.google.com/spreadsheets/d/11quO_mDX0c_x85wJnCO3UMKKztJUyzOmwu1HS1ZPS38/edit?gid=0#gid=0", "_blank");
-}
+    function accederPlanes() {
+      window.open("https://docs.google.com/spreadsheets/d/11quO_mDX0c_x85wJnCO3UMKKztJUyzOmwu1HS1ZPS38/edit?gid=0#gid=0", "_blank");
+    }
     
     function mostrarCampanas() {
       document.getElementById("content").innerHTML = ` 
@@ -106,6 +107,12 @@ function accederPlanes() {
       `;
     }
 
+
+
+
+
+
+    
     function agregarCampana() {
       document.getElementById("content").innerHTML = ` 
         <h2>Agregar Nueva Campaña</h2>
