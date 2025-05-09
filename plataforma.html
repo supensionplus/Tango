@@ -46,22 +46,30 @@
       overflow-y: auto;
     }
 
-    #submenu-campanas button.btn-submenu {
-  width: 100%;
-  margin: 5px 0;
-  padding: 10px;
+
+
+
+#submenu-campanas {
+  display: flex;
+  gap: 10px;
+  margin-bottom: 20px;
+  flex-wrap: wrap;
+}
+
+#submenu-campanas .btn-submenu {
+  padding: 10px 15px;
   background: #ff6f61;
   border: none;
   border-radius: 5px;
   color: white;
   font-weight: bold;
   cursor: pointer;
+  white-space: nowrap;
 }
 
-#submenu-campanas button.btn-submenu:hover {
+#submenu-campanas .btn-submenu:hover {
   background: #ff3b2f;
 }
-
 
 
 
@@ -124,7 +132,7 @@
     function mostrarCampanas() {
     document.getElementById("content").innerHTML = `
     <h2>Mis Campañas</h2>
-    <div id="submenu-campanas" style="margin-bottom: 20px;">
+    <div id="submenu-campanas">
       <button class="btn-submenu" onclick="mostrarListaCampanas()">Lista de Campañas</button>
       <button class="btn-submenu" onclick="mostrarAgregarCampana()">Agregar Campaña</button>
       <button class="btn-submenu" onclick="mostrarEditarCampana()">Editar Campaña</button>
@@ -134,7 +142,8 @@
       <p>Selecciona una opción del menú para empezar.</p>
     </div>
   `;
-}
+    }
+
 
     
     function agregarCampana() {
