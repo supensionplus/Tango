@@ -129,41 +129,77 @@
     }
     
 
-    function mostrarCampanas() {
+// Función principal para mostrar el módulo de campañas
+  function mostrarCampanas() {
     document.getElementById("content").innerHTML = `
-    <h2>Mis Campañas</h2>
-    <div id="submenu-campanas">
-      <button class="btn-submenu" onclick="mostrarListaCampanas()">Lista de Campañas</button>
-      <button class="btn-submenu" onclick="mostrarAgregarCampana()">Agregar Campaña</button>
-      <button class="btn-submenu" onclick="mostrarEditarCampana()">Editar Campaña</button>
-      <button class="btn-submenu" onclick="mostrarBorrarCampana()">Borrar Campaña</button>
-    </div>
-    <div id="contenido-campanas">
-      <p>Selecciona una opción del menú para empezar.</p>
-    </div>
-  `;
+      <h2>Mis Campañas</h2>
+      <div id="submenu-campanas" style="display: flex; gap: 10px; margin-bottom: 15px;">
+        <button class="btn-submenu" onclick="mostrarListaCampanas()">Lista de Campañas</button>
+        <button class="btn-submenu" onclick="mostrarAgregarCampana()">Agregar Campaña</button>
+        <button class="btn-submenu" onclick="mostrarEditarCampana()">Editar Campaña</button>
+        <button class="btn-submenu" onclick="mostrarVisualizarCampana()">Visualizar Campaña</button>
+        <button class="btn-submenu" onclick="exportarCampanas()">Exportar</button>
+        <button class="btn-submenu" onclick="document.getElementById('fileInputCampanas').click()">Importar</button>
+        <input type="file" id="fileInputCampanas" accept=".csv" style="display:none" onchange="importarCampanas(event)">
+      </div>
+      <div id="contenido-campanas">
+        <p>Selecciona una opción del menú para empezar.</p>
+      </div>
+    `;
+  }
+
+  // Obtener campañas desde localStorage según el usuario activo
+  function obtenerCampanas() {
+    const usuario = localStorage.getItem("usuarioActivo");
+    const data = localStorage.getItem("campanas_" + usuario);
+    return data ? JSON.parse(data) : [];
+  }
+
+
+    // Guardar campañas en localStorage
+  function guardarCampanas(campanas) {
+    const usuario = localStorage.getItem("usuarioActivo");
+    localStorage.setItem("campanas_" + usuario, JSON.stringify(campanas));
+  }
+
+    
+    
+
+// Mostrar lista de campañas en tabla con selección
+  function mostrarListaCampanas() {
+    const campanas = obtenerCampanas();
+    if (campanas.length === 0) {
+      document.getElementById("contenido-campanas").innerHTML = `<p>No hay campañas registradas.</p>`;
+      return;
     }
 
+    let tabla = `
+      <table border="1" style="width:100%; border-collapse: collapse;">
+        <thead>
+          <tr>
+            <th>Seleccionar</th>
+            <th>Nombre</th>
+            <th>Descripción</th>
+            <th>Fecha</th>
+          </tr>
+        </thead>
+        <tbody>
+    `;
 
-function mostrarListaCampanas() {
-  // Aquí se puede hacer una petición para obtener las campañas desde Google Sheets
-  document.getElementById("contenido-campanas").innerHTML = `
-    <h3>Lista de Campañas</h3>
-    <table id="tabla-campanas">
-      <thead>
+    campanas.forEach((c, index) => {
+      tabla += `
         <tr>
-          <th>Título</th>
-          <th>Descripción</th>
-          <th>Acciones</th>
+          <td><input type="radio" name="campanaSeleccionada" value="${index}"></td>
+          <td>${c.nombre}</td>
+          <td>${c.descripcion}</td>
+          <td>${c.fecha}</td>
         </tr>
-      </thead>
-      <tbody>
-        <!-- Las filas de campañas se llenarán dinámicamente aquí -->
-      </tbody>
-    </table>
-  `;
-  cargarCampanas(); // Llamamos a una función para cargar las campañas
-}
+      `;
+    });
+
+    tabla += `</tbody></table>`;
+    document.getElementById("contenido-campanas").innerHTML = tabla;
+  }
 
 
     function cargarCampanas() {
