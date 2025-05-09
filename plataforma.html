@@ -56,7 +56,6 @@
     <button id="btnUsuarios" onclick="accederUsuarios()">Acceso a Usuarios</button>
     <button id="btnPlanes" onclick="accederPlanes()">Acceso a Planes</button>
     <button onclick="mostrarCampanas()">Mis Campañas</button>
-    <button onclick="agregarCampana()">Agregar Campaña</button>
     <button onclick="cerrarSesion()">Cerrar sesión</button>
   </div>
 
@@ -101,11 +100,13 @@
     }
     
     function mostrarCampanas() {
-      document.getElementById("content").innerHTML = ` 
-        <h2>Mis Campañas</h2>
-        <p>(Aquí se cargará la lista de campañas del usuario logueado)</p>
-      `;
-    }
+    <div id="submenu-campanas">
+      <button onclick="mostrarListaCampanas()">Lista de Campañas</button>
+      <button onclick="mostrarAgregarCampana()">Agregar Campaña</button>
+      <button onclick="mostrarEditarCampana()">Editar Campaña</button>
+      <button onclick="mostrarBorrarCampana()">Borrar Campaña</button>
+    </div>    
+  }
 
 
 
