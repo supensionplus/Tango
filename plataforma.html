@@ -145,6 +145,128 @@
     }
 
 
+function mostrarListaCampanas() {
+  // Aquí se puede hacer una petición para obtener las campañas desde Google Sheets
+  document.getElementById("contenido-campanas").innerHTML = `
+    <h3>Lista de Campañas</h3>
+    <table id="tabla-campanas">
+      <thead>
+        <tr>
+          <th>Título</th>
+          <th>Descripción</th>
+          <th>Acciones</th>
+        </tr>
+      </thead>
+      <tbody>
+        <!-- Las filas de campañas se llenarán dinámicamente aquí -->
+      </tbody>
+    </table>
+  `;
+  cargarCampanas(); // Llamamos a una función para cargar las campañas
+}
+
+
+    function cargarCampanas() {
+  // Simulamos que obtenemos las campañas desde Google Sheets o un sistema
+  const campanas = [
+    { titulo: "Campaña 1", descripcion: "Descripción de la campaña 1" },
+    { titulo: "Campaña 2", descripcion: "Descripción de la campaña 2" },
+    { titulo: "Campaña 3", descripcion: "Descripción de la campaña 3" }
+  ];
+
+  const tablaCampanas = document.querySelector("#tabla-campanas tbody");
+  tablaCampanas.innerHTML = ""; // Limpiar la tabla antes de cargar
+
+  campanas.forEach((campana, index) => {
+    const row = document.createElement("tr");
+    row.innerHTML = `
+      <td>${campana.titulo}</td>
+      <td>${campana.descripcion}</td>
+      <td>
+        <button onclick="editarCampana(${index})">Editar</button>
+        <button onclick="borrarCampana(${index})">Borrar</button>
+      </td>
+    `;
+    tablaCampanas.appendChild(row);
+  });
+}
+
+
+
+    function agregarCampana() {
+  const numCampanas = 5; // Este valor debe depender del plan del usuario (ej. Plan A permite 5 campañas)
+  const numCampanasActivas = 3; // Este valor debe calcularse basado en las campañas actuales
+
+  if (numCampanasActivas >= numCampanas) {
+    alert("Has alcanzado el límite de campañas para tu plan.");
+    return;
+  }
+
+  document.getElementById("contenido-campanas").innerHTML = `
+    <h3>Agregar Nueva Campaña</h3>
+    <form id="form-agregar-campana">
+      <label for="titulo">Título:</label>
+      <input type="text" id="titulo" name="titulo" required />
+      <label for="descripcion">Descripción:</label>
+      <textarea id="descripcion" name="descripcion" required></textarea>
+      <button type="submit">Agregar Campaña</button>
+    </form>
+  `;
+
+  document.getElementById("form-agregar-campana").addEventListener("submit", function(event) {
+    event.preventDefault();
+    const titulo = document.getElementById("titulo").value;
+    const descripcion = document.getElementById("descripcion").value;
+    
+    // Lógica para agregar la campaña a la base de datos
+    alert(`Campaña "${titulo}" agregada con éxito`);
+    mostrarListaCampanas(); // Volver a mostrar la lista
+  });
+}
+
+
+
+    function editarCampana(index) {
+  const campanas = [
+    { titulo: "Campaña 1", descripcion: "Descripción de la campaña 1" },
+    { titulo: "Campaña 2", descripcion: "Descripción de la campaña 2" },
+    { titulo: "Campaña 3", descripcion: "Descripción de la campaña 3" }
+  ];
+
+  const campana = campanas[index];
+
+  document.getElementById("contenido-campanas").innerHTML = `
+    <h3>Editar Campaña</h3>
+    <form id="form-editar-campana">
+      <label for="titulo">Título:</label>
+      <input type="text" id="titulo" name="titulo" value="${campana.titulo}" required />
+      <label for="descripcion">Descripción:</label>
+      <textarea id="descripcion" name="descripcion" required>${campana.descripcion}</textarea>
+      <button type="submit">Guardar Cambios</button>
+    </form>
+  `;
+
+  document.getElementById("form-editar-campana").addEventListener("submit", function(event) {
+    event.preventDefault();
+    const titulo = document.getElementById("titulo").value;
+    const descripcion = document.getElementById("descripcion").value;
+
+    // Lógica para actualizar la campaña en la base de datos
+    alert(`Campaña "${titulo}" editada con éxito`);
+    mostrarListaCampanas(); // Volver a mostrar la lista
+  });
+}
+
+function borrarCampana(index) {
+  if (confirm("¿Estás seguro de que deseas borrar esta campaña?")) {
+    // Lógica para borrar la campaña
+    alert(`Campaña eliminada con éxito`);
+    mostrarListaCampanas(); // Volver a mostrar la lista
+  }
+}
+
+
+    
     
     function agregarCampana() {
       document.getElementById("content").innerHTML = ` 
