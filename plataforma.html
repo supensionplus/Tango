@@ -201,28 +201,79 @@ function mostrarListaCampanas() {
 
 function mostrarAgregarCampana() {
   document.getElementById("contenido-campanas").innerHTML = `
-    <h3>Agregar Nueva Campaña</h3>
-    <form id="form-campana">
-      <label>Nombre de la campaña: <input type="text" name="nombre" required></label><br>
-      <label>URL de destino: <input type="url" name="url" required></label><br>
-      <label>Título banner: <input type="text" name="titulo_banner"></label><br>
-      <label>Subtítulo banner: <input type="text" name="subtitulo_banner"></label><br>
-      <label>Imagen banner: <input type="url" name="imagen_url"></label><br>
-      <label>Texto botón: <input type="text" name="texto_boton"></label><br>
-      <label>URL botón: <input type="url" name="url_boton"></label><br>
-      <button type="submit">Guardar</button>
+    <h2>Crear Nueva Campaña</h2>
+    <form id="form-agregar-campana" style="max-width: 600px; background: #f9f9f9; padding: 20px; border-radius: 10px; box-shadow: 0 0 10px rgba(0,0,0,0.1);">
+      <div style="margin-bottom: 15px;">
+        <label for="nombre" style="display:block; font-weight:bold;">Nombre de la campaña:</label>
+        <input type="text" id="nombre" name="nombre" required style="width:100%; padding:8px;">
+      </div>
+
+      <div style="margin-bottom: 15px;">
+        <label for="urlDestino" style="display:block; font-weight:bold;">URL de destino:</label>
+        <input type="url" id="urlDestino" name="urlDestino" required style="width:100%; padding:8px;">
+      </div>
+
+      <div style="margin-bottom: 15px;">
+        <label for="tituloBanner" style="display:block; font-weight:bold;">Título del Banner:</label>
+        <input type="text" id="tituloBanner" name="tituloBanner" required style="width:100%; padding:8px;">
+      </div>
+
+      <div style="margin-bottom: 15px;">
+        <label for="subtituloBanner" style="display:block; font-weight:bold;">Subtítulo del Banner:</label>
+        <input type="text" id="subtituloBanner" name="subtituloBanner" required style="width:100%; padding:8px;">
+      </div>
+
+      <div style="margin-bottom: 15px;">
+        <label for="imagenUrl" style="display:block; font-weight:bold;">URL de la imagen del banner:</label>
+        <input type="url" id="imagenUrl" name="imagenUrl" required style="width:100%; padding:8px;">
+      </div>
+
+      <div style="margin-bottom: 15px;">
+        <label for="textoBoton" style="display:block; font-weight:bold;">Texto del botón CTA:</label>
+        <input type="text" id="textoBoton" name="textoBoton" required style="width:100%; padding:8px;">
+      </div>
+
+      <div style="margin-bottom: 15px;">
+        <label for="urlBoton" style="display:block; font-weight:bold;">URL del botón CTA:</label>
+        <input type="url" id="urlBoton" name="urlBoton" required style="width:100%; padding:8px;">
+      </div>
+
+      <button type="submit" style="background-color:#28a745; color:white; padding:10px 20px; border:none; border-radius:5px; cursor:pointer;">
+        Crear Campaña
+      </button>
     </form>
   `;
 
-  document.getElementById("form-campana").addEventListener("submit", function (e) {
+  document.getElementById("form-agregar-campana").addEventListener("submit", function (e) {
     e.preventDefault();
-    const datos = Object.fromEntries(new FormData(this).entries());
-    const campanas = obtenerCampanas();
-    campanas.push(datos);
-    guardarCampanas(campanas);
+
+    const usuario = localStorage.getItem("usuario");
+    const campanas = JSON.parse(localStorage.getItem("campanas_" + usuario)) || [];
+
+    const nuevaCampana = {
+      nombre: document.getElementById("nombre").value,
+      urlDestino: document.getElementById("urlDestino").value,
+      tituloBanner: document.getElementById("tituloBanner").value,
+      subtituloBanner: document.getElementById("subtituloBanner").value,
+      imagenUrl: document.getElementById("imagenUrl").value,
+      textoBoton: document.getElementById("textoBoton").value,
+      urlBoton: document.getElementById("urlBoton").value
+    };
+
+    // Validación para evitar nombres duplicados
+    if (campanas.some(c => c.nombre === nuevaCampana.nombre)) {
+      alert("Ya existe una campaña con ese nombre.");
+      return;
+    }
+
+    campanas.push(nuevaCampana);
+    localStorage.setItem("campanas_" + usuario, JSON.stringify(campanas));
+
+    alert("Campaña creada correctamente.");
     mostrarListaCampanas();
   });
 }
+
 
 function editarCampana(index) {
   const campanas = obtenerCampanas();
