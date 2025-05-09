@@ -45,6 +45,27 @@
       padding: 40px;
       overflow-y: auto;
     }
+
+    #submenu-campanas button.btn-submenu {
+  width: 100%;
+  margin: 5px 0;
+  padding: 10px;
+  background: #ff6f61;
+  border: none;
+  border-radius: 5px;
+  color: white;
+  font-weight: bold;
+  cursor: pointer;
+}
+
+#submenu-campanas button.btn-submenu:hover {
+  background: #ff3b2f;
+}
+
+
+
+
+    
   </style>
 </head>
 <body>
@@ -101,25 +122,19 @@
     
 
     function mostrarCampanas() {
-  document.getElementById("content").innerHTML = `
+    document.getElementById("content").innerHTML = `
     <h2>Mis Campañas</h2>
-    <div id="submenu-campanas">
-      <button onclick="mostrarListaCampanas()">Lista de Campañas</button>
-      <button onclick="mostrarAgregarCampana()">Agregar Campaña</button>
-      <button onclick="mostrarEditarCampana()">Editar Campaña</button>
-      <button onclick="mostrarBorrarCampana()">Borrar Campaña</button>
+    <div id="submenu-campanas" style="margin-bottom: 20px;">
+      <button class="btn-submenu" onclick="mostrarListaCampanas()">Lista de Campañas</button>
+      <button class="btn-submenu" onclick="mostrarAgregarCampana()">Agregar Campaña</button>
+      <button class="btn-submenu" onclick="mostrarEditarCampana()">Editar Campaña</button>
+      <button class="btn-submenu" onclick="mostrarBorrarCampana()">Borrar Campaña</button>
     </div>
     <div id="contenido-campanas">
-      <!-- Aquí se cargará el contenido dinámicamente -->
+      <p>Selecciona una opción del menú para empezar.</p>
     </div>
   `;
 }
-
-
-
-
-
-
 
     
     function agregarCampana() {
