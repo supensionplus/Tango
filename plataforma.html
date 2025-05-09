@@ -99,14 +99,22 @@
       window.open("https://docs.google.com/spreadsheets/d/11quO_mDX0c_x85wJnCO3UMKKztJUyzOmwu1HS1ZPS38/edit?gid=0#gid=0", "_blank");
     }
     
+
     function mostrarCampanas() {
+  document.getElementById("content").innerHTML = `
+    <h2>Mis Campañas</h2>
     <div id="submenu-campanas">
       <button onclick="mostrarListaCampanas()">Lista de Campañas</button>
       <button onclick="mostrarAgregarCampana()">Agregar Campaña</button>
       <button onclick="mostrarEditarCampana()">Editar Campaña</button>
       <button onclick="mostrarBorrarCampana()">Borrar Campaña</button>
-    </div>    
-  }
+    </div>
+    <div id="contenido-campanas">
+      <!-- Aquí se cargará el contenido dinámicamente -->
+    </div>
+  `;
+}
+
 
 
 
