@@ -45,6 +45,21 @@
       padding: 40px;
       overflow-y: auto;
     }
+    table {
+      width: 100%;
+      border-collapse: collapse;
+      margin-top: 20px;
+    }
+    table, th, td {
+      border: 1px solid #ddd;
+    }
+    th, td {
+      padding: 8px;
+      text-align: left;
+    }
+    th {
+      background-color: #f2f2f2;
+    }
   </style>
 </head>
 <body>
@@ -53,7 +68,7 @@
     <img src="https://i.imgur.com/5QFzj6L.png" alt="Logo Tango" width="100">
     <h2>TANGO</h2>
     <button onclick="mostrarInicio()">Inicio</button>
-    <button onclick="window.location.href='usuarios.html'">Acceso a Usuarios</button>
+    <button id="btnUsuarios" onclick="mostrarUsuarios()">Acceso a Usuarios</button>
     <button onclick="mostrarCampanas()">Mis Campañas</button>
     <button onclick="agregarCampana()">Agregar Campaña</button>
     <button onclick="cerrarSesion()">Cerrar sesión</button>
@@ -82,29 +97,49 @@
       document.getElementById("btnUsuarios").style.display = "none";
     }
 
+    // Función para cargar los usuarios desde la hoja de Google Sheets
+    async function cargarUsuarios() {
+      const URL_CSV = 'https://docs.google.com/spreadsheets/d/e/2PACX-1vSd5yoasP3pxVzZvV-XwaurTOhxNl00JtMRh0bLYnp-SEmg3L-Q1wXH9Q7u-fLZqjJaoY6wmmrD1Y4K/pub?output=csv';
+      const res = await fetch(URL_CSV);
+      const texto = await res.text();
+      const filas = texto.split('\n').slice(1); // Sin encabezado
+      const datos = filas.map(f => f.split(','));
+
+      let contenido = '<table><thead><tr><th>Usuario</th><th>Nombre</th><th>Estado</th><th>Fecha de Vencimiento</th></tr></thead><tbody>';
+
+      datos.forEach(usuario => {
+        contenido += `<tr>
+          <td>${usuario[0]}</td>
+          <td>${usuario[1]}</td>
+          <td>${usuario[3]}</td>
+          <td>${usuario[2]}</td>
+        </tr>`;
+      });
+
+      contenido += '</tbody></table>';
+      document.getElementById("content").innerHTML = contenido;
+    }
+
     function mostrarInicio() {
-      document.getElementById("content").innerHTML = `
+      document.getElementById("content").innerHTML = ` 
         <h1>Bienvenido, ${nombre}</h1>
         <p>Usa el menú a la izquierda para gestionar tus campañas y sacar el máximo provecho de <strong>Tango</strong>.</p>
       `;
     }
 
     function mostrarUsuarios() {
-      document.getElementById("content").innerHTML = `
-        <h2>Gestión de Usuarios</h2>
-        <p>(Aquí podrás listar, editar y agregar usuarios - solo visible para administradores)</p>
-      `;
+      cargarUsuarios();
     }
 
     function mostrarCampanas() {
-      document.getElementById("content").innerHTML = `
+      document.getElementById("content").innerHTML = ` 
         <h2>Mis Campañas</h2>
         <p>(Aquí se cargará la lista de campañas del usuario logueado)</p>
       `;
     }
 
     function agregarCampana() {
-      document.getElementById("content").innerHTML = `
+      document.getElementById("content").innerHTML = ` 
         <h2>Agregar Nueva Campaña</h2>
         <p>(Aquí irá el formulario para crear una campaña nueva)</p>
       `;
