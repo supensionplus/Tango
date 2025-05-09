@@ -88,348 +88,253 @@
     <button onclick="cerrarSesion()">Cerrar sesión</button>
   </div>
 
+
   <div id="content">
-    <h1 id="bienvenida">Bienvenido</h1>
-    <p>Usa el menú a la izquierda para gestionar tus campañas y sacar el máximo provecho de Tango.</p>
-  </div>
+  <h1 id="bienvenida">Bienvenido</h1>
+  <p>Usa el menú a la izquierda para gestionar tus campañas y sacar el máximo provecho de Tango.</p>
+  <button id="btnCerrarSesion" onclick="cerrarSesion()">Cerrar Sesión</button>
+</div>
 
-  <script>
-    const usuario = localStorage.getItem("usuario");
-    const nombre = localStorage.getItem("nombre_usuario");
-    const tipo = localStorage.getItem("tipo_usuario");
-
-    // Si no hay sesión, redirigir
-    if (!usuario || !nombre) {
-      window.location.href = "index.html";
-    }
-
-    // Personalizar bienvenida
-    document.getElementById("bienvenida").textContent = `Bienvenido, ${nombre}`;
-
-    // Mostrar u ocultar botón Acceso a Usuarios
-    if (tipo !== "A") {
-      document.getElementById("btnUsuarios").style.display = "none";
-      document.getElementById("btnPlanes").style.display = "none";
-    }
-
-    function mostrarInicio() {
-      document.getElementById("content").innerHTML = ` 
-        <h1>Bienvenido, ${nombre}</h1>
-        <p>Usa el menú a la izquierda para gestionar tus campañas y sacar el máximo provecho de <strong>Tango</strong>.</p>
-      `;
-    }
-
-    function accederUsuarios() {
-      // Redirigir directamente a la hoja de Google Sheets en modo edición
-      window.location.href = 'https://docs.google.com/spreadsheets/d/1-Nn3XEag5u408v6H7aDiKMnKJKl5llZoVWEn8upMyhY/edit?gid=0';
-    }
-
-    function accederPlanes() {
-      window.open("https://docs.google.com/spreadsheets/d/11quO_mDX0c_x85wJnCO3UMKKztJUyzOmwu1HS1ZPS38/edit?gid=0#gid=0", "_blank");
-    }
-    
-
-
-
-function mostrarCampanas() {
-  document.getElementById("content").innerHTML = `
-    <h2>Mis Campañas</h2>
-    <div id="submenu-campanas" style="display: flex; gap: 10px; margin-bottom: 15px;">
-      <button class="btn-submenu" onclick="mostrarListaCampanas()">Lista de Campañas</button>
-      <button class="btn-submenu" onclick="mostrarAgregarCampana()">Agregar Campaña</button>
-      <button class="btn-submenu" onclick="mostrarEditarCampana()">Editar Campaña</button>
-      <button class="btn-submenu" onclick="mostrarVisualizarCampana()">Visualizar Campaña</button>
-      <button class="btn-submenu" onclick="exportarCampanas()">Exportar</button>
-      <button class="btn-submenu" onclick="document.getElementById('fileInputCampanas').click()">Importar</button>
-      <input type="file" id="fileInputCampanas" accept=".csv" style="display:none" onchange="importarCampanas(event)">
-    </div>
-    <div id="contenido-campanas">
-      <p>Selecciona una opción del menú para empezar.</p>
-    </div>
-  `;
-}
-
-function obtenerCampanas() {
+<script>
   const usuario = localStorage.getItem("usuario");
-  const data = localStorage.getItem("campanas_" + usuario);
-  return data ? JSON.parse(data) : [];
-}
+  const nombre = localStorage.getItem("nombre_usuario");
+  const tipo = localStorage.getItem("tipo_usuario");
 
-function guardarCampanas(campanas) {
-  const usuario = localStorage.getItem("usuario");
-  localStorage.setItem("campanas_" + usuario, JSON.stringify(campanas));
-}
-
-function mostrarListaCampanas() {
-  const campanas = obtenerCampanas();
-  if (campanas.length === 0) {
-    document.getElementById("contenido-campanas").innerHTML = `<p>No hay campañas registradas.</p>`;
-    return;
+  // Si no hay sesión, redirigir
+  if (!usuario || !nombre) {
+    window.location.href = "index.html";
   }
 
-  let tabla = `
-    <table border="1" style="width:100%; border-collapse: collapse;">
-      <thead>
-        <tr>
-          <th>Nombre</th>
-          <th>URL Destino</th>
-          <th>Banner</th>
-          <th>Acciones</th>
-        </tr>
-      </thead>
-      <tbody>
-  `;
+  // Personalizar bienvenida
+  document.getElementById("bienvenida").textContent = `Bienvenido, ${nombre}`;
 
-  campanas.forEach((c, index) => {
-    tabla += `
-      <tr>
-        <td>${c.nombre}</td>
-        <td>${c.url}</td>
-        <td>${c.titulo_banner}</td>
-        <td>
-          <button onclick="editarCampana(${index})">Editar</button>
-          <button onclick="borrarCampana(${index})">Borrar</button>
-          <button onclick="verCampana('${c.nombre}')">Ver</button>
-        </td>
-      </tr>
+  // Mostrar u ocultar botón Acceso a Usuarios
+  if (tipo !== "A") {
+    document.getElementById("btnUsuarios").style.display = "none";
+    document.getElementById("btnPlanes").style.display = "none";
+  }
+
+  // Mostrar el contenido inicial (Bienvenida)
+  function mostrarInicio() {
+    document.getElementById("content").innerHTML = ` 
+      <h1>Bienvenido, ${nombre}</h1>
+      <p>Usa el menú a la izquierda para gestionar tus campañas y sacar el máximo provecho de <strong>Tango</strong>.</p>
+      <button id="btnCerrarSesion" onclick="cerrarSesion()">Cerrar Sesión</button>
     `;
-  });
+  }
 
-  tabla += `</tbody></table>`;
-  document.getElementById("contenido-campanas").innerHTML = tabla;
-}
+  // Función para cerrar sesión
+  function cerrarSesion() {
+    // Borrar datos del localStorage
+    localStorage.removeItem("usuario");
+    localStorage.removeItem("nombre_usuario");
+    localStorage.removeItem("tipo_usuario");
+    localStorage.removeItem("campanas_" + usuario);
+    
+    // Redirigir al usuario a la página de inicio
+    window.location.href = "index.html"; // Cambia esta URL por la de tu página de inicio de sesión
+  }
 
-function mostrarAgregarCampana() {
-  const formulario = `
-    <h2>Crear Nueva Campaña</h2>
-    <form id="form-agregar-campana" style="max-width:600px; background:#f1f1f1; padding:20px; border-radius:10px;">
-      <label>Nombre de la campaña:<br><input type="text" id="nombre" required style="width:100%;padding:8px;"></label><br><br>
-      <label>URL de destino:<br><input type="url" id="urlDestino" required style="width:100%;padding:8px;"></label><br><br>
-      <label>Título del Banner:<br><input type="text" id="tituloBanner" required style="width:100%;padding:8px;"></label><br><br>
-      <label>Subtítulo del Banner:<br><input type="text" id="subtituloBanner" required style="width:100%;padding:8px;"></label><br><br>
-      <label>URL de la Imagen:<br><input type="url" id="imagenUrl" required style="width:100%;padding:8px;"></label><br><br>
-      <label>Texto del Botón CTA:<br><input type="text" id="textoBoton" required style="width:100%;padding:8px;"></label><br><br>
-      <label>URL del Botón CTA:<br><input type="url" id="urlBoton" required style="width:100%;padding:8px;"></label><br><br>
-      <button type="submit" style="padding:10px 20px; background:#28a745; color:#fff; border:none; border-radius:5px;">Guardar campaña</button>
-    </form>
-  `;
+  // Función para mostrar el menú de campañas
+  function mostrarCampanas() {
+    document.getElementById("content").innerHTML = `
+      <h2>Mis Campañas</h2>
+      <div id="submenu-campanas" style="display: flex; gap: 10px; margin-bottom: 15px;">
+        <button class="btn-submenu" onclick="mostrarListaCampanas()">Lista de Campañas</button>
+        <button class="btn-submenu" onclick="mostrarAgregarCampana()">Agregar Campaña</button>
+        <button class="btn-submenu" onclick="exportarCampanas()">Exportar</button>
+        <button class="btn-submenu" onclick="document.getElementById('fileInputCampanas').click()">Importar</button>
+        <input type="file" id="fileInputCampanas" accept=".csv" style="display:none" onchange="importarCampanas(event)">
+      </div>
+      <div id="contenido-campanas">
+        <p>Selecciona una opción del menú para empezar.</p>
+      </div>
+    `;
+  }
 
-  document.getElementById("contenido-campanas").innerHTML = formulario;
+  // Función para obtener las campañas del localStorage
+  function obtenerCampanas() {
+    const data = localStorage.getItem("campanas_" + usuario);
+    return data ? JSON.parse(data) : [];
+  }
 
-  document.getElementById("form-agregar-campana").addEventListener("submit", function (e) {
-    e.preventDefault();
+  // Función para guardar las campañas en localStorage
+  function guardarCampanas(campanas) {
+    localStorage.setItem("campanas_" + usuario, JSON.stringify(campanas));
+  }
 
-    const usuario = localStorage.getItem("usuario");
-    const campanasKey = "campanas_" + usuario;
-    const campanas = JSON.parse(localStorage.getItem(campanasKey)) || [];
+  // Función para mostrar la lista de campañas
+  function mostrarListaCampanas() {
+    const campanas = obtenerCampanas();
+    if (campanas.length === 0) {
+      document.getElementById("contenido-campanas").innerHTML = `<p>No hay campañas registradas.</p>`;
+      return;
+    }
 
-    const nuevaCampana = {
-      nombre: document.getElementById("nombre").value,
-      urlDestino: document.getElementById("urlDestino").value,
-      tituloBanner: document.getElementById("tituloBanner").value,
-      subtituloBanner: document.getElementById("subtituloBanner").value,
-      imagenUrl: document.getElementById("imagenUrl").value,
-      textoBoton: document.getElementById("textoBoton").value,
-      urlBoton: document.getElementById("urlBoton").value
+    let tabla = `
+      <table border="1" style="width:100%; border-collapse: collapse;">
+        <thead>
+          <tr>
+            <th>Nombre</th>
+            <th>URL Destino</th>
+            <th>Banner</th>
+            <th>Acciones</th>
+          </tr>
+        </thead>
+        <tbody>
+    `;
+
+    campanas.forEach((c, index) => {
+      tabla += `
+        <tr>
+          <td>${c.nombre}</td>
+          <td>${c.urlDestino}</td>
+          <td>${c.tituloBanner}</td>
+          <td>
+            <button onclick="editarCampana(${index})">Editar</button>
+            <button onclick="borrarCampana(${index})">Borrar</button>
+            <button onclick="verCampana('${c.nombre}')">Ver</button>
+          </td>
+        </tr>
+      `;
+    });
+
+    tabla += `</tbody></table>`;
+    document.getElementById("contenido-campanas").innerHTML = tabla;
+  }
+
+  // Función para agregar una nueva campaña
+  function mostrarAgregarCampana() {
+    const formulario = `
+      <h2>Crear Nueva Campaña</h2>
+      <form id="form-agregar-campana" style="max-width:600px; background:#f1f1f1; padding:20px; border-radius:10px;">
+        <label>Nombre de la campaña:<br><input type="text" id="nombre" required style="width:100%;padding:8px;"></label><br><br>
+        <label>URL de destino:<br><input type="url" id="urlDestino" required style="width:100%;padding:8px;"></label><br><br>
+        <label>Título del Banner:<br><input type="text" id="tituloBanner" required style="width:100%;padding:8px;"></label><br><br>
+        <label>Subtítulo del Banner:<br><input type="text" id="subtituloBanner" required style="width:100%;padding:8px;"></label><br><br>
+        <label>URL de la Imagen:<br><input type="url" id="imagenUrl" required style="width:100%;padding:8px;"></label><br><br>
+        <label>Texto del Botón CTA:<br><input type="text" id="textoBoton" required style="width:100%;padding:8px;"></label><br><br>
+        <label>URL del Botón CTA:<br><input type="url" id="urlBoton" required style="width:100%;padding:8px;"></label><br><br>
+        <button type="submit" style="padding:10px 20px; background:#28a745; color:#fff; border:none; border-radius:5px;">Guardar campaña</button>
+      </form>
+    `;
+
+    document.getElementById("contenido-campanas").innerHTML = formulario;
+
+    // Manejar el submit del formulario
+    document.getElementById("form-agregar-campana").addEventListener("submit", function (e) {
+      e.preventDefault();
+
+      const nuevaCampana = {
+        nombre: document.getElementById("nombre").value,
+        urlDestino: document.getElementById("urlDestino").value,
+        tituloBanner: document.getElementById("tituloBanner").value,
+        subtituloBanner: document.getElementById("subtituloBanner").value,
+        imagenUrl: document.getElementById("imagenUrl").value,
+        textoBoton: document.getElementById("textoBoton").value,
+        urlBoton: document.getElementById("urlBoton").value
+      };
+
+      const campanas = obtenerCampanas();
+      campanas.push(nuevaCampana);
+      guardarCampanas(campanas);
+
+      alert("Campaña guardada con éxito.");
+      mostrarListaCampanas();  // Volver a mostrar la lista de campañas
+    });
+  }
+
+  // Función para editar una campaña
+  function editarCampana(index) {
+    const campanas = obtenerCampanas();
+    const c = campanas[index];
+
+    document.getElementById("contenido-campanas").innerHTML = `
+      <h3>Editar Campaña</h3>
+      <form id="form-editar">
+        <label>Nombre: <input type="text" name="nombre" value="${c.nombre}" required></label><br>
+        <label>URL destino: <input type="url" name="urlDestino" value="${c.urlDestino}" required></label><br>
+        <label>Título: <input type="text" name="tituloBanner" value="${c.tituloBanner}"></label><br>
+        <label>Subtítulo: <input type="text" name="subtituloBanner" value="${c.subtituloBanner}"></label><br>
+        <label>Imagen: <input type="url" name="imagenUrl" value="${c.imagenUrl}"></label><br>
+        <label>Texto botón: <input type="text" name="textoBoton" value="${c.textoBoton}"></label><br>
+        <label>URL botón: <input type="url" name="urlBoton" value="${c.urlBoton}"></label><br>
+        <button type="submit">Actualizar</button>
+      </form>
+    `;
+
+    document.getElementById("form-editar").addEventListener("submit", function (e) {
+      e.preventDefault();
+
+      campanas[index] = Object.fromEntries(new FormData(this).entries());
+      guardarCampanas(campanas);
+      mostrarListaCampanas();  // Volver a mostrar la lista de campañas
+    });
+  }
+
+  // Función para borrar una campaña
+  function borrarCampana(index) {
+    const campanas = obtenerCampanas();
+    if (confirm("Seguro que deseas borrar esta campaña?")) {
+      campanas.splice(index, 1);
+      guardarCampanas(campanas);
+      mostrarListaCampanas();  // Volver a mostrar la lista de campañas
+    }
+  }
+
+  // Función para ver los detalles de una campaña (en otro archivo o ventana)
+  function verCampana(nombre) {
+    const campanas = obtenerCampanas();
+    const campana = campanas.find(c => c.nombre === nombre);
+    if (campana) {
+      alert(`Detalles de la campaña: \nNombre: ${campana.nombre}\nURL Destino: ${campana.urlDestino}`);
+    }
+  }
+
+  // Función para exportar campañas a CSV
+  function exportarCampanas() {
+    const campanas = obtenerCampanas();
+    let csv = "Nombre,URL Destino,Título Banner,Subtítulo Banner,Imagen URL,Texto Botón,URL Botón\n";
+    campanas.forEach(c => {
+      csv += `${c.nombre},${c.urlDestino},${c.tituloBanner},${c.subtituloBanner},${c.imagenUrl},${c.textoBoton},${c.urlBoton}\n`;
+    });
+
+    const blob = new Blob([csv], { type: "text/csv" });
+    const url = URL.createObjectURL(blob);
+    const a = document.createElement("a");
+    a.href = url;
+    a.download = "campanas.csv";
+    document.body.appendChild(a);
+    a.click();
+    document.body.removeChild(a);
+  }
+
+  // Función para importar campañas desde un archivo CSV
+  function importarCampanas(event) {
+    const file = event.target.files[0];
+    const reader = new FileReader();
+
+    reader.onload = function(e) {
+      const contents = e.target.result;
+      const lines = contents.split("\n").slice(1); // Saltar cabecera
+      const campanas = [];
+
+      lines.forEach(line => {
+        const [nombre, urlDestino, tituloBanner, subtituloBanner, imagenUrl, textoBoton, urlBoton] = line.split(",");
+        campanas.push({ nombre, urlDestino, tituloBanner, subtituloBanner, imagenUrl, textoBoton, urlBoton });
+      });
+
+      guardarCampanas(campanas);
+      mostrarListaCampanas(); // Actualizar la lista
     };
 
-    campanas.push(nuevaCampana);
-    localStorage.setItem(campanasKey, JSON.stringify(campanas));
-
-    alert("Campaña guardada con éxito.");
-    mostrarListaCampanas();
-  });
-}
-
-
-
-function editarCampana(index) {
-  const campanas = obtenerCampanas();
-  const c = campanas[index];
-
-  document.getElementById("contenido-campanas").innerHTML = `
-    <h3>Editar Campaña</h3>
-    <form id="form-editar">
-      <label>Nombre: <input type="text" name="nombre" value="${c.nombre}" required></label><br>
-      <label>URL destino: <input type="url" name="url" value="${c.url}" required></label><br>
-      <label>Título: <input type="text" name="titulo_banner" value="${c.titulo_banner}"></label><br>
-      <label>Subtítulo: <input type="text" name="subtitulo_banner" value="${c.subtitulo_banner}"></label><br>
-      <label>Imagen: <input type="url" name="imagen_url" value="${c.imagen_url}"></label><br>
-      <label>Texto botón: <input type="text" name="texto_boton" value="${c.texto_boton}"></label><br>
-      <label>URL botón: <input type="url" name="url_boton" value="${c.url_boton}"></label><br>
-      <button type="submit">Actualizar</button>
-    </form>
-  `;
-
-  document.getElementById("form-editar").addEventListener("submit", function (e) {
-    e.preventDefault();
-    campanas[index] = Object.fromEntries(new FormData(this).entries());
-    guardarCampanas(campanas);
-    mostrarListaCampanas();
-  });
-}
-
-function borrarCampana(index) {
-  const campanas = obtenerCampanas();
-  if (confirm("Seguro que deseas borrar esta campaña?")) {
-    campanas.splice(index, 1);
-    guardarCampanas(campanas);
-    mostrarListaCampanas();
-  }
-}
-
-function verCampana(nombre) {
-  const link = window.location.origin + `/campana.html?nombre=${encodeURIComponent(nombre)}`;
-  window.open(link, "_blank");
-}
-
-function exportarCampanas() {
-  const campanas = obtenerCampanas();
-  const csv = [
-    "nombre,url,titulo_banner,subtitulo_banner,imagen_url,texto_boton,url_boton",
-    ...campanas.map(c => [
-      c.nombre, c.url, c.titulo_banner, c.subtitulo_banner, c.imagen_url, c.texto_boton, c.url_boton
-    ].map(v => '"' + (v || "").replace(/"/g, '""') + '"').join(","))
-  ].join("\n");
-
-  const blob = new Blob([csv], { type: "text/csv" });
-  const a = document.createElement("a");
-  a.href = URL.createObjectURL(blob);
-  a.download = "campanas.csv";
-  a.click();
-}
-
-function importarCampanas(event) {
-  const file = event.target.files[0];
-  if (!file) return;
-
-  const reader = new FileReader();
-  reader.onload = function (e) {
-    const lines = e.target.result.split("\n").slice(1); // saltar encabezado
-    const campanas = obtenerCampanas();
-    lines.forEach(line => {
-      const [nombre, url, titulo_banner, subtitulo_banner, imagen_url, texto_boton, url_boton] = line.split(",");
-      if (nombre) {
-        campanas.push({ nombre, url, titulo_banner, subtitulo_banner, imagen_url, texto_boton, url_boton });
-      }
-    });
-    guardarCampanas(campanas);
-    mostrarListaCampanas();
-  };
-  reader.readAsText(file);
-}
-
-function mostrarVisualizarCampana() {
-  document.getElementById("contenido-campanas").innerHTML = `
-    <p>Para ver una campaña publicada, haz clic en el botón "Ver" desde la lista de campañas.</p>
-  `;
-}
-
-    
-
-
-    function cargarCampanas() {
-  // Simulamos que obtenemos las campañas desde Google Sheets o un sistema
-  const campanas = [
-    { titulo: "Campaña 1", descripcion: "Descripción de la campaña 1" },
-    { titulo: "Campaña 2", descripcion: "Descripción de la campaña 2" },
-    { titulo: "Campaña 3", descripcion: "Descripción de la campaña 3" }
-  ];
-
-  const tablaCampanas = document.querySelector("#tabla-campanas tbody");
-  tablaCampanas.innerHTML = ""; // Limpiar la tabla antes de cargar
-
-  campanas.forEach((campana, index) => {
-    const row = document.createElement("tr");
-    row.innerHTML = `
-      <td>${campana.titulo}</td>
-      <td>${campana.descripcion}</td>
-      <td>
-        <button onclick="editarCampana(${index})">Editar</button>
-        <button onclick="borrarCampana(${index})">Borrar</button>
-      </td>
-    `;
-    tablaCampanas.appendChild(row);
-  });
-}
-
-
-
-    function agregarCampana() {
-  const numCampanas = 5; // Este valor debe depender del plan del usuario (ej. Plan A permite 5 campañas)
-  const numCampanasActivas = 3; // Este valor debe calcularse basado en las campañas actuales
-
-  if (numCampanasActivas >= numCampanas) {
-    alert("Has alcanzado el límite de campañas para tu plan.");
-    return;
+    reader.readAsText(file);
   }
 
-  document.getElementById("contenido-campanas").innerHTML = `
-    <h3>Agregar Nueva Campaña</h3>
-    <form id="form-agregar-campana">
-      <label for="titulo">Título:</label>
-      <input type="text" id="titulo" name="titulo" required />
-      <label for="descripcion">Descripción:</label>
-      <textarea id="descripcion" name="descripcion" required></textarea>
-      <button type="submit">Agregar Campaña</button>
-    </form>
-  `;
-
-  document.getElementById("form-agregar-campana").addEventListener("submit", function(event) {
-    event.preventDefault();
-    const titulo = document.getElementById("titulo").value;
-    const descripcion = document.getElementById("descripcion").value;
-    
-    // Lógica para agregar la campaña a la base de datos
-    alert(`Campaña "${titulo}" agregada con éxito`);
-    mostrarListaCampanas(); // Volver a mostrar la lista
-  });
-}
-
-
-
-    function editarCampana(index) {
-  const campanas = [
-    { titulo: "Campaña 1", descripcion: "Descripción de la campaña 1" },
-    { titulo: "Campaña 2", descripcion: "Descripción de la campaña 2" },
-    { titulo: "Campaña 3", descripcion: "Descripción de la campaña 3" }
-  ];
-
-  const campana = campanas[index];
-
-  document.getElementById("contenido-campanas").innerHTML = `
-    <h3>Editar Campaña</h3>
-    <form id="form-editar-campana">
-      <label for="titulo">Título:</label>
-      <input type="text" id="titulo" name="titulo" value="${campana.titulo}" required />
-      <label for="descripcion">Descripción:</label>
-      <textarea id="descripcion" name="descripcion" required>${campana.descripcion}</textarea>
-      <button type="submit">Guardar Cambios</button>
-    </form>
-  `;
-
-  document.getElementById("form-editar-campana").addEventListener("submit", function(event) {
-    event.preventDefault();
-    const titulo = document.getElementById("titulo").value;
-    const descripcion = document.getElementById("descripcion").value;
-
-    // Lógica para actualizar la campaña en la base de datos
-    alert(`Campaña "${titulo}" editada con éxito`);
-    mostrarListaCampanas(); // Volver a mostrar la lista
-  });
-}
-
-
-    
-    
-
-    function cerrarSesion() {
-      if (confirm("¿Seguro que deseas cerrar sesión?")) {
-        localStorage.clear();
-        window.location.href = "index.html";
-      }
-    }
-  </script>
+  // Iniciar el contenido
+  mostrarInicio();
+</script>
+  
 
 </body>
 </html>
