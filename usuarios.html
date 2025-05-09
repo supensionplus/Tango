@@ -1,0 +1,100 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8">
+  <title>TANGO - Gestión de Usuarios</title>
+  <link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@400;700&display=swap" rel="stylesheet">
+  <style>
+    /* Aquí va todo tu estilo actual, sin cambios */
+    * { box-sizing: border-box; }
+    body {
+      margin: 0;
+      font-family: 'Montserrat', sans-serif;
+      display: flex;
+      height: 100vh;
+      background: #f5f5f5;
+    }
+    #sidebar {
+      width: 250px;
+      background: #222;
+      color: white;
+      padding: 20px;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+    }
+    #sidebar h2 {
+      margin-top: 10px;
+      font-size: 1.4em;
+    }
+    #sidebar button {
+      width: 100%;
+      margin: 10px 0;
+      padding: 10px;
+      background: #ff6f61;
+      border: none;
+      border-radius: 5px;
+      color: white;
+      font-weight: bold;
+      cursor: pointer;
+    }
+    #sidebar button:hover {
+      background: #ff3b2f;
+    }
+    #content {
+      flex: 1;
+      padding: 40px;
+      overflow-y: auto;
+    }
+  </style>
+</head>
+<body>
+
+  <div id="sidebar">
+    <img src="https://i.imgur.com/5QFzj6L.png" alt="Logo Tango" width="100">
+    <h2>TANGO</h2>
+    <button onclick="mostrarUsuarios()">Gestión de Usuarios</button>
+    <button onclick="cerrarSesion()">Cerrar sesión</button>
+  </div>
+
+  <div id="content">
+    <h1>Gestión de Usuarios</h1>
+    <p>Aquí podrás listar, editar y agregar usuarios.</p>
+    <!-- Aquí se cargarán los datos de usuarios -->
+  </div>
+
+  <script>
+    const URL_CSV = 'https://docs.google.com/spreadsheets/d/e/2PACX-1vSd5yoasP3pxVzZvV-XwaurTOhxNl00JtMRh0bLYnp-SEmg3L-Q1wXH9Q7u-fLZqjJaoY6wmmrD1Y4K/pub?output=csv';
+
+    // Función para cargar y mostrar los usuarios
+    async function mostrarUsuarios() {
+      const res = await fetch(URL_CSV);
+      const texto = await res.text();
+      const filas = texto.split('\n').slice(1); // sin encabezado
+      const datos = filas.map(f => f.split(','));
+
+      let contenido = '<table border="1"><thead><tr><th>Usuario</th><th>Nombre</th><th>Tipo</th><th>Plan</th></tr></thead><tbody>';
+
+      datos.forEach(usuario => {
+        contenido += `<tr>
+          <td>${usuario[0]}</td>
+          <td>${usuario[1]}</td>
+          <td>${usuario[4]}</td>
+          <td>${usuario[5]}</td>
+        </tr>`;
+      });
+
+      contenido += '</tbody></table>';
+      document.getElementById("content").innerHTML = contenido;
+    }
+
+    function cerrarSesion() {
+      if (confirm("¿Seguro que deseas cerrar sesión?")) {
+        localStorage.clear();
+        window.location.href = "index.html";
+      }
+    }
+  </script>
+
+</body>
+</html>
