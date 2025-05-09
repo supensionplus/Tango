@@ -1,0 +1,120 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8">
+  <title>TANGO - Baila con el contenido del mundo</title>
+  <link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@400;700&display=swap" rel="stylesheet">
+  <style>
+    body {
+      margin: 0;
+      font-family: 'Montserrat', sans-serif;
+      background: linear-gradient(135deg, #1f1c2c, #928dab);
+      color: white;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+      height: 100vh;
+      text-align: center;
+    }
+    h1 {
+      font-size: 3em;
+      margin-bottom: 0.2em;
+    }
+    p {
+      font-size: 1.2em;
+      max-width: 600px;
+      margin: 0 auto 2em;
+    }
+    .login-form {
+      background: rgba(255, 255, 255, 0.1);
+      padding: 2em;
+      border-radius: 12px;
+      backdrop-filter: blur(8px);
+    }
+    input {
+      display: block;
+      margin: 1em auto;
+      padding: 0.8em;
+      width: 80%;
+      border: none;
+      border-radius: 8px;
+      font-size: 1em;
+    }
+    button {
+      padding: 0.8em 2em;
+      background: #ff6f61;
+      color: white;
+      border: none;
+      border-radius: 8px;
+      font-size: 1em;
+      cursor: pointer;
+    }
+    #bienvenida {
+      position: fixed;
+      top: 40%;
+      left: 50%;
+      transform: translate(-50%, -50%);
+      background: #000000cc;
+      padding: 2em 3em;
+      border-radius: 12px;
+      font-size: 1.5em;
+      display: none;
+    }
+  </style>
+</head>
+<body>
+
+  <h1>💃 TANGO</h1>
+  <p>La herramienta que te permite bailar sobre cualquier página del mundo. 
+     Imagina vender sin tener que crear contenido: solo conecta, camufla y convierte. 
+     <br><strong>Tango es el escenario donde tu marca nunca deja de moverse.</strong></p>
+
+  <div class="login-form">
+    <input type="text" id="usuario" placeholder="Usuario">
+    <input type="password" id="password" placeholder="Contraseña">
+    <button onclick="verificarAcceso()">Acceder</button>
+  </div>
+
+  <div id="bienvenida"></div>
+
+  <script>
+    const URL_USUARIOS = 'https://docs.google.com/spreadsheets/d/e/2PACX-1vTCIQwxgTObmyDhIsJMr5HJdNFa3x5ThC7fTpxPa8GLvXi14PPkL5-FXOqn6zsS899_LfMGUYdJQeyh/pub?output=csv';
+
+    async function verificarAcceso() {
+      const usuario = document.getElementById("usuario").value.trim();
+      const password = document.getElementById("password").value.trim();
+
+      const res = await fetch(URL_USUARIOS);
+      const texto = await res.text();
+      const filas = texto.split('\n').slice(1); // sin encabezado
+      const datos = filas.map(f => f.split(','));
+
+      const user = datos.find(d => d[1] === usuario && d[2] === password);
+
+      if (user) {
+        const [nombre, usuario, contraseña, vencimiento, tipo, plan, campo1, campo2, campo3, campo4] = user;
+
+        // Guardar datos en localStorage
+        localStorage.setItem("usuario", usuario);
+        localStorage.setItem("nombre_usuario", nombre);
+        localStorage.setItem("tipo_usuario", tipo);
+        localStorage.setItem("plan", plan);
+        localStorage.setItem("campos_extra", JSON.stringify({ campo1, campo2, campo3, campo4 }));
+
+        // Mostrar bienvenida
+        const bienvenida = document.getElementById("bienvenida");
+        bienvenida.textContent = `¡Bienvenido, ${nombre}!`;
+        bienvenida.style.display = 'block';
+
+        setTimeout(() => {
+          window.location.href = "plataforma.html";
+        }, 2500);
+      } else {
+        alert("Usuario o contraseña incorrectos.");
+      }
+    }
+  </script>
+
+</body>
+</html>
