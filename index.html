@@ -79,6 +79,16 @@
   <div id="bienvenida"></div>
 
   <script>
+    
+    // Si ya hay sesión activa, redirigir automáticamente a la plataforma
+  const usuario = localStorage.getItem("usuario");
+  const nombre = localStorage.getItem("nombre_usuario");
+  const tipo = localStorage.getItem("tipo_usuario");
+
+  if (usuario && nombre && tipo) {
+    window.location.href = "plataforma.html";
+  }
+    
     const URL_USUARIOS = 'https://docs.google.com/spreadsheets/d/e/2PACX-1vTCIQwxgTObmyDhIsJMr5HJdNFa3x5ThC7fTpxPa8GLvXi14PPkL5-FXOqn6zsS899_LfMGUYdJQeyh/pub?output=csv';
 
     async function verificarAcceso() {
