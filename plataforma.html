@@ -45,21 +45,6 @@
       padding: 40px;
       overflow-y: auto;
     }
-    table {
-      width: 100%;
-      border-collapse: collapse;
-      margin-top: 20px;
-    }
-    table, th, td {
-      border: 1px solid #ddd;
-    }
-    th, td {
-      padding: 8px;
-      text-align: left;
-    }
-    th {
-      background-color: #f2f2f2;
-    }
   </style>
 </head>
 <body>
@@ -68,7 +53,7 @@
     <img src="https://i.imgur.com/5QFzj6L.png" alt="Logo Tango" width="100">
     <h2>TANGO</h2>
     <button onclick="mostrarInicio()">Inicio</button>
-    <button id="btnUsuarios" onclick="mostrarUsuarios()">Acceso a Usuarios</button>
+    <button id="btnUsuarios" onclick="accederUsuarios()">Acceso a Usuarios</button>
     <button onclick="mostrarCampanas()">Mis Campañas</button>
     <button onclick="agregarCampana()">Agregar Campaña</button>
     <button onclick="cerrarSesion()">Cerrar sesión</button>
@@ -97,29 +82,6 @@
       document.getElementById("btnUsuarios").style.display = "none";
     }
 
-    // Función para cargar los usuarios desde la hoja de Google Sheets
-    async function cargarUsuarios() {
-      const URL_CSV = 'https://docs.google.com/spreadsheets/d/e/2PACX-1vSd5yoasP3pxVzZvV-XwaurTOhxNl00JtMRh0bLYnp-SEmg3L-Q1wXH9Q7u-fLZqjJaoY6wmmrD1Y4K/pub?output=csv';
-      const res = await fetch(URL_CSV);
-      const texto = await res.text();
-      const filas = texto.split('\n').slice(1); // Sin encabezado
-      const datos = filas.map(f => f.split(','));
-
-      let contenido = '<table><thead><tr><th>Usuario</th><th>Nombre</th><th>Estado</th><th>Fecha de Vencimiento</th></tr></thead><tbody>';
-
-      datos.forEach(usuario => {
-        contenido += `<tr>
-          <td>${usuario[0]}</td>
-          <td>${usuario[1]}</td>
-          <td>${usuario[3]}</td>
-          <td>${usuario[2]}</td>
-        </tr>`;
-      });
-
-      contenido += '</tbody></table>';
-      document.getElementById("content").innerHTML = contenido;
-    }
-
     function mostrarInicio() {
       document.getElementById("content").innerHTML = ` 
         <h1>Bienvenido, ${nombre}</h1>
@@ -127,8 +89,9 @@
       `;
     }
 
-    function mostrarUsuarios() {
-      cargarUsuarios();
+    function accederUsuarios() {
+      // Redirigir al archivo de Google Sheets para que puedas editarlo directamente
+      window.open('https://docs.google.com/spreadsheets/d/e/2PACX-1vSd5yoasP3pxVzZvV-XwaurTOhxNl00JtMRh0bLYnp-SEmg3L-Q1wXH9Q7u-fLZqjJaoY6wmmrD1Y4K/pub?output=csv', '_blank');
     }
 
     function mostrarCampanas() {
